@@ -1,0 +1,18 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - 8080:80
+    volumes:
+      # Mounts the project folder to '/workspace'
+      # in devcontainer.json we have specified workspaceFolder=/workspace.
+      - ..:/workspace:cached
+    extra_hosts:
+      # This gives the container access to services running on the host machine.
+      - "host.docker.internal:host-gateway"
+    environment:
+      TZ: Africa/Johannesburg
+    # Set TZ and run caddy server.
+    entrypoint: ["sudo", "bash", "-c", "echo 'Africa/Johannesburg' > /etc/timezone; ln -sf /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime; caddy run --config /workspace/.devcontainer/Caddyfile"]

@@ -1,0 +1,10 @@
+# For now, all requests to use port 80.
+dfmoller-acer-aspire.springbok-cod.ts.net:80 {
+	# For example, reverse proxy to some service running in the devcontainer.
+	reverse_proxy :5173
+	# For example, reverse proxy to some backend server. /api/ will be stripped
+    # from the request.
+	handle_path /api/* {
+		reverse_proxy host.docker.internal:8000
+	}
+}

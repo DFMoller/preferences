@@ -1,0 +1,30 @@
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Mounts the project folder to '/workspace'
+      # in devcontainer.json we have specified workspaceFolder=/workspace
+      - ..:/workspace:cached
+      # Mount named volume to pypoetry's cache so that user's packages persist
+      # between docker sessions.
+      - pypoetry-cache:/home/vscode/.cache/pypoetry:cached
+      # Uncomment when required:
+      # Map through your X11 display's unix socket. Useful for GUI applications (eg matplotlib).
+      # Note that this may not work if your docker is installed via snap. This is due to snap's
+      # confinement policies. If you are using snap, consider removing snap's docker and installing
+      # docker via apt instead.
+      # - /tmp/.X11-unix/:/tmp/.X11-unix/
+    environment:
+      REDIS_HOST: redis
+      # Uncomment DISPLAY and MPLBACKEND when using matplotlib with X11 forwarding.
+      # Be sure to bind the X11 socket above.
+      # DISPLAY: $DISPLAY
+      # Set the matplotlib backend to TkAgg for compatibility with X11.
+      # MPLBACKEND: "TkAgg"
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+volumes:
+  pypoetry-cache:

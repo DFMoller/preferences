@@ -1,0 +1,35 @@
+{
+	"name": "put-module-name-here",
+
+	// path to docker-compose.yml relative to devcontainer.json
+	"dockerComposeFile": "docker-compose.yml",
+
+	// this is the service vscode is going to attach to
+	"service": "dev",
+
+	// here we specify /workspace, because in docker-compose we have mapped
+	// through the top-level project folder to /workspace
+	"workspaceFolder": "/workspace",
+
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "editor.tabSize": 2,
+                "files.eol": "\n"
+            },
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "eamodio.gitlens",
+                "github.copilot",
+                "github.copilot-chat",
+                "ms-azuretools.vscode-docker",
+                "pkief.material-icon-theme",
+                "matthewpi.caddyfile-support",
+                "anthropic.claude-code"
+            ]
+        }
+    },
+
+	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "node"
+}
