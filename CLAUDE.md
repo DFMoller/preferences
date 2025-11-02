@@ -12,6 +12,7 @@ The repository is organized by topic, with each folder containing multiple examp
 
 - `.devcontainer/` - Development container configurations
   - `ubuntu-python-poetry/` - Ubuntu 24.04 + Python + Poetry devcontainer setup
+  - `ubuntu-python-uv/` - Ubuntu 24.04 + Python + uv devcontainer setup
   - `node-caddy/` - Node.js with Caddy web server devcontainer setup
 
 Each folder contains alternative approaches or examples for the same concept. Only one example from each topic would typically be used in any given project.
