@@ -11,7 +11,7 @@ This repository serves as a preferences and examples collection for AI assistant
 The repository is organized by topic, with each folder containing multiple example implementations:
 
 - `.devcontainer/` - Development container configurations
-  - `ubuntu/` - Ubuntu 24.04 + Python + Poetry devcontainer setup
+  - `ubuntu-python-poetry/` - Ubuntu 24.04 + Python + Poetry devcontainer setup
   - `node-caddy/` - Node.js with Caddy web server devcontainer setup
 
 Each folder contains alternative approaches or examples for the same concept. Only one example from each topic would typically be used in any given project.
