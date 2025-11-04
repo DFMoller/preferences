@@ -187,6 +187,18 @@ The MCP server exposes the following resources:
 - `compare_devcontainers(name1, name2)` - Compare two devcontainer configurations
 - `list_all_preferences()` - Get organized list of all preferences
 
+#### Available Prompts
+
+The MCP server automatically provides context to AI assistants through prompts. These are **automatically available** without needing to be explicitly requested:
+
+- `coding_style_guidelines` - Comprehensive coding style guidelines.
+
+- `devcontainer_preferences` - Information about available devcontainer templates and when to use them
+
+- `repository_guide` - General guidance on using this preferences repository
+
+**Important**: These prompts provide automatic context to AI assistants. The coding style guidelines will be applied to all code without needing explicit reminders.
+
 ## Development
 
 This repository uses `uv` for Python dependency management. The MCP server is implemented with [FastMCP](https://gofastmcp.com/).

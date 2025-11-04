@@ -19,13 +19,13 @@ Usage:
 """
 
 import argparse
-from pathlib import Path
 
 from fastmcp import FastMCP
 
 from .utils import get_repo_root
 from .resources import register_resources
 from .tools import register_tools
+from .prompts import register_prompts
 
 
 # Get repository root
@@ -41,6 +41,9 @@ register_resources(mcp, REPO_ROOT)
 
 # Register tools (executable functions)
 register_tools(mcp, REPO_ROOT)
+
+# Register prompts (automatic context injection)
+register_prompts(mcp, REPO_ROOT)
 
 
 def main():
