@@ -1,0 +1,17 @@
+# Cloudflare Tunnel Configuration
+#
+# Setup Instructions:
+# 1. Create a tunnel in your Cloudflare Zero Trust dashboard
+#    Navigate to: Zero Trust > Networks > Tunnels > Create Tunnel
+# 2. Copy the tunnel ID and credentials JSON
+# 3. Replace TUNNEL_ID below with your actual tunnel ID
+# 4. Place your credentials in cloudflared/credentials.json
+#
+# For more info: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/
+
+tunnel: TUNNEL_ID
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  # Route all traffic to the MCP server
+  - service: http://mcp-server:8000

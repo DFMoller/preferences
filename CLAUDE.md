@@ -10,12 +10,31 @@ This repository serves as a preferences and examples collection for AI assistant
 
 The repository is organized by topic, with each folder containing multiple example implementations:
 
-- `.devcontainer/` - Development container configurations
+- `templates/devcontainers/` - Development container configurations
   - `ubuntu-python-poetry/` - Ubuntu 24.04 + Python + Poetry devcontainer setup
   - `ubuntu-python-uv/` - Ubuntu 24.04 + Python + uv devcontainer setup
   - `node-caddy/` - Node.js with Caddy web server devcontainer setup
 
 Each folder contains alternative approaches or examples for the same concept. Only one example from each topic would typically be used in any given project.
+
+## Using This Repository in Your Projects
+
+Access these preferences through the MCP (Model Context Protocol) server. This provides system-wide access to all preferences and examples without needing per-project configuration.
+
+### MCP Server Installation
+
+This repository includes a FastMCP server that can be installed to Claude Desktop or Claude Code, or deployed remotely. Once installed, all these preferences become automatically available to Claude through the Model Context Protocol.
+
+**Installation**: See `README.md` for complete installation instructions including:
+- Local installation for Claude Desktop using `fastmcp install`
+- Remote deployment using Docker and Cloudflare Tunnel
+- Connecting Claude Code to local or remote MCP servers
+
+**Benefits**:
+- Automatic access to all preferences without per-project setup
+- Search and comparison tools for exploring preferences
+- Works across all Claude Desktop and Claude Code sessions
+- Can be deployed remotely for access from anywhere
 
 ## Important Notes
 

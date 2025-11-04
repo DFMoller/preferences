@@ -8,4 +8,171 @@ This repository helps AI assistants understand my preferred approaches to common
 
 ## Structure
 
-Examples are organized by topic in separate folders (e.g., `.devcontainer/` for development container setups). Each folder may contain multiple alternative implementations - only one would typically be used in any given project.
+Examples are organized by topic in separate folders (e.g., `templates/devcontainers/` for development container setups). Each folder may contain multiple alternative implementations - only one would typically be used in any given project.
+
+## Using These Preferences in Your Projects
+
+Access these preferences through the MCP (Model Context Protocol) server. This provides system-wide access to all your preferences without needing per-project configuration.
+
+### Option 1: Local Installation (Claude Desktop)
+
+For system-wide access on your local machine from Claude Desktop or other MCP-compatible AI assistants:
+
+#### Installation
+
+First, ensure you have `uv` installed:
+```bash
+# macOS
+brew install uv
+
+# Linux/WSL
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Install dependencies and the MCP server:
+```bash
+# Clone this repository
+git clone <repo-url> ~/preferences
+cd ~/preferences
+
+# Install dependencies
+uv sync
+
+# Install to Claude Desktop
+fastmcp install claude-desktop mcp_server/server.py --project .
+```
+
+Alternatively, manually configure Claude Desktop by editing the config file:
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "preferences": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "/absolute/path/to/preferences",
+        "--with",
+        "fastmcp",
+        "fastmcp",
+        "run",
+        "mcp_server/server.py"
+      ],
+      "env": {
+        "REPO_PATH": "/absolute/path/to/preferences"
+      }
+    }
+  }
+}
+```
+
+After configuration, restart Claude Desktop completely.
+
+#### Testing
+
+Test the server locally:
+```bash
+# Run with stdio transport (default)
+python -m mcp_server.server
+
+# Run with HTTP transport for remote access
+python -m mcp_server.server --transport http --port 8000
+```
+
+### Option 2: Docker Deployment (Remote Access)
+
+For deploying the MCP server to a remote server (e.g., home server) with public access via Cloudflare Tunnel:
+
+#### Prerequisites
+
+- Docker and Docker Compose installed on your server
+- A Cloudflare account with Zero Trust access
+- A domain configured in Cloudflare (optional, but recommended)
+
+#### Setup Cloudflare Tunnel
+
+1. Go to [Cloudflare Zero Trust Dashboard](https://one.dash.cloudflare.com/)
+2. Navigate to **Networks > Tunnels**
+3. Click **Create a tunnel**
+4. Choose **Cloudflared** and give it a name (e.g., "preferences-mcp")
+5. Install the connector (you can skip this as we'll use Docker)
+6. Copy the **tunnel token** (it starts with `ey...`)
+7. Configure the tunnel:
+   - **Public Hostname**: Choose your subdomain (e.g., `mcp.yourdomain.com`)
+   - **Service Type**: HTTP
+   - **URL**: `mcp-server:8000` (this is the internal Docker network hostname)
+
+#### Deploy the Server
+
+```bash
+# Clone the repository on your server
+git clone <repo-url> ~/preferences
+cd ~/preferences
+
+# Create .env file with your Cloudflare tunnel token
+cp .env.example .env
+# Edit .env and add your CLOUDFLARE_TUNNEL_TOKEN
+
+# Build and start the services
+docker-compose up -d
+
+# Check status
+docker-compose ps
+
+# View logs
+docker-compose logs -f
+```
+
+#### Connect from Claude Code
+
+Once deployed, add the MCP server to Claude Code using the HTTP transport:
+
+```bash
+claude mcp add --transport http preferences https://mcp.yourdomain.com/mcp
+```
+
+Replace `https://mcp.yourdomain.com/mcp` with your actual Cloudflare Tunnel URL. The `/mcp` path is the MCP endpoint.
+
+#### Management Commands
+
+```bash
+# Stop the services
+docker-compose down
+
+# Restart the services
+docker-compose restart
+
+# Update to latest code
+git pull
+docker-compose up -d --build
+
+# View MCP server logs
+docker-compose logs -f mcp-server
+
+# View Cloudflare tunnel logs
+docker-compose logs -f cloudflared
+```
+
+#### Available Resources
+
+The MCP server exposes the following resources:
+
+- `preferences://catalog` - List all available preferences
+- `preferences://devcontainer/{name}/{file}` - Get devcontainer files (config, dockerfile, compose, caddyfile)
+- `preferences://guide/{name}` - Get guides (claude, readme, style)
+- `preferences://devcontainer/{name}/list` - List all files in a devcontainer
+- `preferences://files/{filepath}` - Access any file in the repository
+
+#### Available Tools
+
+- `search_preferences(query, category)` - Search across preference files
+- `list_devcontainer_files(name)` - List files in a specific devcontainer
+- `compare_devcontainers(name1, name2)` - Compare two devcontainer configurations
+- `list_all_preferences()` - Get organized list of all preferences
+
+## Development
+
+This repository uses `uv` for Python dependency management. The MCP server is implemented with [FastMCP](https://gofastmcp.com/).
