@@ -94,16 +94,31 @@ For deploying the MCP server to a remote server (e.g., home server) with public 
 
 #### Setup Cloudflare Tunnel
 
-1. Go to [Cloudflare Zero Trust Dashboard](https://one.dash.cloudflare.com/)
-2. Navigate to **Networks > Tunnels**
-3. Click **Create a tunnel**
-4. Choose **Cloudflared** and give it a name (e.g., "preferences-mcp")
-5. Install the connector (you can skip this as we'll use Docker)
-6. Copy the **tunnel token** (it starts with `ey...`)
-7. Configure the tunnel:
-   - **Public Hostname**: Choose your subdomain (e.g., `mcp.yourdomain.com`)
-   - **Service Type**: HTTP
-   - **URL**: `mcp-server:8000` (this is the internal Docker network hostname)
+1. **Create the tunnel** in [Cloudflare Zero Trust Dashboard](https://one.dash.cloudflare.com/):
+   - Navigate to **Networks > Tunnels**
+   - Click **Create a tunnel**
+   - Choose **Cloudflared** as the connector type
+   - Give it a name (e.g., "preferences-mcp")
+   - Save the tunnel
+
+2. **Download tunnel credentials**:
+   - After creating the tunnel, you'll see a tunnel ID (format: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`)
+   - Cloudflare provides a credentials JSON file - download it
+   - Save it as `cloudflared/credentials.json` in this repository
+
+3. **Update the tunnel configuration**:
+   - Edit `cloudflared/config.yml`
+   - Replace `YOUR_TUNNEL_ID` with your actual tunnel ID
+   - The hostname `preferences.lunarlab.co.za` is already configured (change if needed)
+
+4. **Configure public hostname** in Cloudflare dashboard:
+   - In your tunnel settings, go to the **Public Hostname** tab
+   - Click **Add a public hostname**:
+     - **Subdomain**: `preferences` (or your preferred subdomain)
+     - **Domain**: Select your domain
+     - **Service Type**: HTTP
+     - **URL**: `mcp-server:8000`
+   - Save the configuration
 
 #### Deploy the Server
 
@@ -112,9 +127,8 @@ For deploying the MCP server to a remote server (e.g., home server) with public 
 git clone <repo-url> ~/preferences
 cd ~/preferences
 
-# Create .env file with your Cloudflare tunnel token
-cp .env.example .env
-# Edit .env and add your CLOUDFLARE_TUNNEL_TOKEN
+# Ensure cloudflared/credentials.json and cloudflared/config.yml are configured
+# (see Setup Cloudflare Tunnel section above)
 
 # Build and start the services
 docker-compose up -d
