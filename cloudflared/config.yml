@@ -1,17 +1,35 @@
 # Cloudflare Tunnel Configuration
 #
 # Setup Instructions:
-# 1. Create a tunnel in your Cloudflare Zero Trust dashboard
-#    Navigate to: Zero Trust > Networks > Tunnels > Create Tunnel
-# 2. Copy the tunnel ID and credentials JSON
-# 3. Replace TUNNEL_ID below with your actual tunnel ID
-# 4. Place your credentials in cloudflared/credentials.json
+# 1. Create a NEW tunnel in your Cloudflare Zero Trust dashboard
+#    a. Navigate to: Zero Trust > Networks > Tunnels > Create Tunnel
+#    b. Choose "Cloudflared" as the connector type
+#    c. Name it something like "preferences-mcp" or "mcp-server"
+#    d. Save the tunnel
+#
+# 2. Get the tunnel credentials:
+#    a. After creating, you'll see the tunnel ID (format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+#    b. Download or copy the credentials JSON
+#    c. Replace YOUR_TUNNEL_ID below with the actual tunnel ID
+#    d. Save the credentials JSON as cloudflared/credentials.json
+#
+# 3. Configure the public hostname in Cloudflare dashboard:
+#    a. In your tunnel settings, go to "Public Hostname" tab
+#    b. Add hostname: preferences.lunarlab.co.za
+#    c. Service type: HTTP
+#    d. URL: mcp-server:8000
+#
+# 4. Start the services: docker-compose up -d
 #
 # For more info: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/
 
-tunnel: TUNNEL_ID
+tunnel: 42922a74-cbe1-4b80-a79d-a25b2d4568c2
 credentials-file: /etc/cloudflared/credentials.json
 
 ingress:
-  # Route all traffic to the MCP server
-  - service: http://mcp-server:8000
+  # Route traffic from preferences.lunarlab.co.za to the MCP server
+  - hostname: preferences.lunarlab.co.za
+    service: http://mcp-server:8000
+
+  # Catch-all rule (required)
+  - service: http_status:404
