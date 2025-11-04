@@ -150,7 +150,7 @@ def register_tools(mcp: FastMCP, repo_root: Path):
             "devcontainers": []
         }
 
-        devcontainer_dir = repo_root / ".devcontainer"
+        devcontainer_dir = repo_root / "templates" / "devcontainers"
         if devcontainer_dir.exists():
             for dc_dir in devcontainer_dir.iterdir():
                 if dc_dir.is_dir() and not dc_dir.name.startswith("."):
